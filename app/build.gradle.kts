@@ -17,27 +17,27 @@ android {
     applicationId = "com.aistudio.studora.ahsnkp"
     minSdk = 24
     targetSdk = 36
-    versionCode = 1
-    versionName = "1.0"
+    versionCode = providers.gradleProperty("studoraVersionCode").map(String::toInt).getOrElse(1)
+    versionName = providers.gradleProperty("studoraVersionName").orElse("1.0").get()
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
-  // Do not remove or modify these signingConfigs. They are necessary for building, installing,
-  // and updating Android apps in AI Studio.
+  // Release signing is supplied through environment variables in local development and CI.
+  // Debug builds use Android Gradle Plugin's standard local debug key.
+  val releaseKeystorePath = providers.environmentVariable("KEYSTORE_PATH").orNull
+  val releaseStorePassword = providers.environmentVariable("STORE_PASSWORD").orNull
+  val releaseKeyAlias = providers.environmentVariable("KEY_ALIAS").orNull
+  val releaseKeyPassword = providers.environmentVariable("KEY_PASSWORD").orNull
+
   signingConfigs {
     create("release") {
-      val keystorePath = System.getenv("KEYSTORE_PATH") ?: "${rootDir}/my-upload-key.jks"
-      storeFile = file(keystorePath)
-      storePassword = System.getenv("STORE_PASSWORD")
-      keyAlias = "upload"
-      keyPassword = System.getenv("KEY_PASSWORD")
-    }
-    create("debugConfig") {
-      storeFile = file("${rootDir}/debug.keystore")
-      storePassword = "android"
-      keyAlias = "androiddebugkey"
-      keyPassword = "android"
+      if (!releaseKeystorePath.isNullOrBlank()) {
+        storeFile = file(releaseKeystorePath)
+        storePassword = releaseStorePassword
+        keyAlias = releaseKeyAlias
+        keyPassword = releaseKeyPassword
+      }
     }
   }
 
@@ -46,14 +46,12 @@ android {
       isCrunchPngs = false
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-      // Do not remove or modify this signingConfig assignment. It is necessary for Android apps in
-      // AI Studio.
-      signingConfig = signingConfigs.getByName("release")
+      if (!releaseKeystorePath.isNullOrBlank()) {
+        signingConfig = signingConfigs.getByName("release")
+      }
     }
     debug {
-      // Do not remove or modify this signingConfig assignment. It is necessary for Android apps in
-      // AI Studio.
-      signingConfig = signingConfigs.getByName("debugConfig")
+      // The default debug signing configuration is generated and managed by the Android plugin.
     }
   }
   compileOptions {
