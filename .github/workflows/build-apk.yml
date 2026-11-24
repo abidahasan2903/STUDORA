@@ -45,13 +45,13 @@ jobs:
         run: ./gradlew --no-daemon -PstudoraVersionCode="$((100000 + APP_VERSION_CODE))" -PstudoraVersionName="$APP_VERSION_NAME" assembleDebug
 
       - name: Prepare release APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk "$RUNNER_TEMP/Studora.apk"
+        run: cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/Studora.apk
 
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v7
         with:
           name: studora-apk
-          path: ${{ runner.temp }}/Studora.apk
+          path: app/build/outputs/apk/debug/Studora.apk
           if-no-files-found: error
           retention-days: 14
 
@@ -70,7 +70,7 @@ jobs:
             Installable Android debug build for commit `${{ github.sha }}`.
 
             AI features show a coming-soon message until Firebase AI is configured by the maintainer.
-          files: ${{ runner.temp }}/Studora.apk
+          files: app/build/outputs/apk/debug/Studora.apk
           overwrite_files: true
           fail_on_unmatched_files: true
           make_latest: true
