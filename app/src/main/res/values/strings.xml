@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">STUDORA</string>
+    <string name="app_tagline">Your AI-Powered Student Life Companion</string>
+    <string name="developer_credit">Developed by Abid Ahasan</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_notes">My Notes</string>
+    <string name="nav_ai">Studora AI</string>
+    <string name="nav_profile">Profile</string>
+    <string name="offline_banner">Offline Mode • Saved local data &amp; files remain available</string>
+    <string name="error_no_internet_ai">Internet connection is required for new AI generation. Your saved notes, PDFs, audio, and past conversations work offline.</string>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <files-path
+        name="studora_files"
+        path="studora_data/" />
+    <cache-path
+        name="studora_cache"
+        path="." />
+</paths>

@@ -1,0 +1,6 @@
+{
+  "name": "STUDORA",
+  "description": "Your AI-Powered Student Life Companion with local-first notes, document scanner, study planner, tasks, wallet, and AI study assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
