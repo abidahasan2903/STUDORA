@@ -47,7 +47,16 @@ data class NutritionAnalysisResult(
     val aiSuggestions: String
 )
 
-class AiService {
+class AiService(val isConfigured: Boolean = true) {
+
+    companion object {
+        const val AI_NOT_CONFIGURED_MESSAGE =
+            "AI features are coming soon in this build. Firebase AI is not configured yet."
+    }
+
+    private fun requireConfiguration() {
+        check(isConfigured) { AI_NOT_CONFIGURED_MESSAGE }
+    }
 
     private val generalModel by lazy {
         Firebase.ai.generativeModel(
@@ -130,6 +139,7 @@ class AiService {
         userMessage: String,
         explicitContext: String? = null
     ): Flow<String> = flow {
+        requireConfiguration()
         val history = historyMessages.takeLast(14).map { (role, text) ->
             content(role = if (role == "USER") "user" else "model") { text(text) }
         }
@@ -175,6 +185,7 @@ class AiService {
         fallbackTextContext: String? = null,
         onStatusUpdate: (String) -> Unit
     ): Flow<String> = flow {
+        requireConfiguration()
         try {
             if (documentFile != null && documentFile.exists() && fileType == "PDF") {
                 val pageCount = PdfUtils.getPdfPageCount(documentFile).getOrThrow()
@@ -298,6 +309,7 @@ class AiService {
         difficulty: String
     ): Result<Pair<String, List<GeneratedQuizItem>>> {
         return try {
+            requireConfiguration()
             val model = Firebase.ai.generativeModel(
                 modelName = DEFAULT_MODEL,
                 generationConfig = generationConfig {
@@ -379,6 +391,7 @@ class AiService {
         cardCount: Int
     ): Result<List<GeneratedFlashcardItem>> {
         return try {
+            requireConfiguration()
             val model = Firebase.ai.generativeModel(
                 modelName = DEFAULT_MODEL,
                 generationConfig = generationConfig {
@@ -447,6 +460,7 @@ class AiService {
         weeklyAvailability: String
     ): Result<Pair<String, List<GeneratedStudySessionItem>>> {
         return try {
+            requireConfiguration()
             val model = Firebase.ai.generativeModel(
                 modelName = DEFAULT_MODEL,
                 generationConfig = generationConfig {
@@ -501,6 +515,7 @@ class AiService {
         userPrompt: String
     ): Result<NutritionAnalysisResult> {
         return try {
+            requireConfiguration()
             val model = Firebase.ai.generativeModel(
                 modelName = DEFAULT_MODEL,
                 generationConfig = generationConfig {

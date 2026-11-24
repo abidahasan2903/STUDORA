@@ -9,6 +9,7 @@ import com.example.core.LocalStorageManager
 import com.example.data.db.StudoraDatabase
 import com.example.data.repo.StudoraRepository
 import com.example.notifications.ReminderScheduler
+import com.google.firebase.FirebaseApp
 
 class StudoraApplication : Application() {
     val database: StudoraDatabase by lazy { StudoraDatabase.getInstance(this) }
@@ -16,7 +17,9 @@ class StudoraApplication : Application() {
     val connectivityObserver: ConnectivityObserver by lazy { ConnectivityObserver(this) }
     val reminderScheduler: ReminderScheduler by lazy { ReminderScheduler(this) }
     val audioService: AudioService by lazy { AudioService(this, storageManager) }
-    val aiService: AiService by lazy { AiService() }
+    val aiService: AiService by lazy {
+        AiService(isConfigured = FirebaseApp.getApps(this).isNotEmpty())
+    }
     val backupManager: BackupManager by lazy { BackupManager(this, database, storageManager) }
 
     val repository: StudoraRepository by lazy {

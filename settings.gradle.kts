@@ -22,6 +22,6 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "STUDORA"
+rootProject.name = "Studora"
 
 include(":app")

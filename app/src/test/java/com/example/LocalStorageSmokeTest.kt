@@ -10,13 +10,13 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [36])
-class ExampleRobolectricTest {
+class LocalStorageSmokeTest {
 
   @Test
   fun `read string from context and verify local storage`() {
     val context = ApplicationProvider.getApplicationContext<Context>()
     val appName = context.getString(R.string.app_name)
-    assertEquals("STUDORA", appName)
+    assertEquals("Studora", appName)
 
     val storage = com.example.core.LocalStorageManager(context)
     org.junit.Assert.assertTrue(storage.documentsDir.absolutePath.startsWith(context.filesDir.absolutePath))

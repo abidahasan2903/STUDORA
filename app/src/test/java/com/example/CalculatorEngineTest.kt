@@ -5,7 +5,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.math.BigDecimal
 
-class ExampleUnitTest {
+class CalculatorEngineTest {
     @Test
     fun calculator_respectsOperatorPrecedence() {
         val res = CalculatorEngine.evaluate("2+3×4")

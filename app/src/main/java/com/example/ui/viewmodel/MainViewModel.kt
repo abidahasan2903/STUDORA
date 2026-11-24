@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.StudoraApplication
+import com.example.core.AiService
 import com.example.core.BackupSummary
 import com.example.core.CalculatorEngine
 import com.example.core.CalculatorHistoryItem
@@ -291,6 +292,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         fallbackTextContext: String?,
         prompt: String
     ) {
+        if (!repo.aiService.isConfigured) {
+            _aiNoteState.value = AiTaskState.Error(AiService.AI_NOT_CONFIGURED_MESSAGE)
+            return
+        }
         if (!repo.connectivityObserver.checkCurrentConnectivity()) {
             _aiNoteState.value = AiTaskState.Error("Internet connection is required to generate new AI notes.")
             return
@@ -484,6 +489,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         difficulty: String,
         onCreated: (Long) -> Unit = {}
     ) {
+        if (!repo.aiService.isConfigured) {
+            _quizGenState.value = AiTaskState.Error(AiService.AI_NOT_CONFIGURED_MESSAGE)
+            return
+        }
         if (!repo.connectivityObserver.checkCurrentConnectivity()) {
             _quizGenState.value = AiTaskState.Error("Internet is required to generate a new AI quiz.")
             return
@@ -521,6 +530,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         sourceText: String?,
         count: Int
     ) {
+        if (!repo.aiService.isConfigured) {
+            _flashcardGenState.value = AiTaskState.Error(AiService.AI_NOT_CONFIGURED_MESSAGE)
+            return
+        }
         if (!repo.connectivityObserver.checkCurrentConnectivity()) {
             _flashcardGenState.value = AiTaskState.Error("Internet is required to generate AI flashcards.")
             return
@@ -625,6 +638,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         weeklyAvailability: String,
         onCreated: (Long) -> Unit = {}
     ) {
+        if (!repo.aiService.isConfigured) {
+            _studyPlanGenState.value = AiTaskState.Error(AiService.AI_NOT_CONFIGURED_MESSAGE)
+            return
+        }
         if (!repo.connectivityObserver.checkCurrentConnectivity()) {
             _studyPlanGenState.value = AiTaskState.Error("Internet is required for AI study planning. You can create a manual study plan offline.")
             return
@@ -1161,6 +1178,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun analyzeFoodChart(chart: FoodChartEntity, prompt: String) {
+        if (!repo.aiService.isConfigured) {
+            _nutritionGenState.value = AiTaskState.Error(AiService.AI_NOT_CONFIGURED_MESSAGE)
+            return
+        }
         if (!repo.connectivityObserver.checkCurrentConnectivity()) {
             _nutritionGenState.value = AiTaskState.Error("Internet is required for AI food chart analysis.")
             return
@@ -1258,6 +1279,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     ) {
         val trimmed = userText.trim()
         if (trimmed.isBlank()) return
+        if (!repo.aiService.isConfigured) {
+            _aiChatError.value = AiService.AI_NOT_CONFIGURED_MESSAGE
+            return
+        }
 
         viewModelScope.launch {
             _aiChatError.value = null
@@ -1321,6 +1346,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun retryPendingRequest(req: PendingAiRequestEntity) {
+        if (!repo.aiService.isConfigured) {
+            notifyUser(AiService.AI_NOT_CONFIGURED_MESSAGE)
+            return
+        }
         if (!repo.connectivityObserver.checkCurrentConnectivity()) {
             notifyUser("Still offline. Connect to the internet to send queued requests.")
             return
